@@ -1,0 +1,1261 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Justice League Academy — Superhero Training for Everyone</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#00c8ff;
+  --purple:#a855f7;
+  --gold:#f5c518;
+  --green:#00e87c;
+  --bg:#030714;
+  --bg-card:#0a1535;
+  --heading:#ffffff;
+  --text:#a8bfd8;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;background:rgba(3,7,20,.88);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,200,255,.1)}
+.nav-brand{font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;letter-spacing:.18em;color:#fff;text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-brand span{color:var(--blue)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;color:#a8bfd8;text-decoration:none;transition:color .2s;text-transform:uppercase}
+.nav-links-mobile-only{display:none}
+.nav-links a:hover{color:var(--blue)}
+.nav-cta{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--blue);border:1px solid rgba(0,200,255,.35);border-radius:999px;padding:8px 18px;text-decoration:none;transition:background .2s,border-color .2s;white-space:nowrap}
+.nav-cta:hover{background:rgba(0,200,255,.08);border-color:rgba(0,200,255,.6)}
+.nav-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.nav-toggle{display:none;flex-direction:column;justify-content:center;gap:5px;width:32px;height:32px;background:none;border:none;cursor:pointer;z-index:101}
+.nav-toggle span{display:block;width:100%;height:2px;background:#a8bfd8;transition:transform .25s,opacity .25s}
+.nav-toggle.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.nav-toggle.open span:nth-child(2){opacity:0}
+.nav-toggle.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+@media(max-width:860px){
+  .nav-toggle{display:flex}
+  .nav-links{position:fixed;top:0;right:0;height:100vh;width:min(78vw,320px);flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:14px;padding:76px 32px 24px;overflow-y:auto;background:rgba(3,7,20,.97);backdrop-filter:blur(12px);border-left:1px solid rgba(0,200,255,.12);transform:translateX(100%);transition:transform .3s ease}
+  .nav-links.open{transform:translateX(0)}
+  .nav-links-mobile-only{display:list-item}
+}
+
+/* ── CONNECT AVATAR ── */
+.av-connect-btn{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.1em;color:#a8bfd8;border:1px solid rgba(255,255,255,.15);border-radius:999px;padding:8px 16px;background:none;cursor:pointer;transition:all .2s;margin-left:10px;white-space:nowrap}
+.av-connect-btn:hover{border-color:rgba(0,200,255,.5);color:var(--blue)}
+.av-connected-badge{display:none;align-items:center;gap:10px;margin-left:10px}
+.av-connected-badge.show{display:flex}
+.av-avatar-name{font-family:'Share Tech Mono',monospace;font-size:11px;color:#a8bfd8}
+.av-karma-pill{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--blue);background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.25);border-radius:999px;padding:4px 12px;cursor:pointer;transition:background .2s}
+.av-karma-pill:hover{background:rgba(0,200,255,.18)}
+.av-logout-btn{background:none;border:none;color:#a8bfd8;font-size:14px;cursor:pointer;opacity:.5;transition:opacity .2s;padding:2px 6px}
+.av-logout-btn:hover{opacity:1}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 24px 80px;z-index:1}
+#hero-canvas{position:absolute;inset:0;z-index:0;width:100%;height:100%}
+.hero-inner{position:relative;z-index:1;max-width:860px}
+.hero-kicker{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.28em;color:var(--blue);margin-bottom:22px;opacity:.85}
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(34px,6vw,70px);font-weight:900;letter-spacing:.03em;color:#fff;line-height:1.08;margin-bottom:28px}
+.hero-title .b{color:var(--blue);text-shadow:0 0 40px rgba(0,200,255,.4)}
+.hero-title .p{color:var(--purple);text-shadow:0 0 40px rgba(168,85,247,.4)}
+.hero-sub{font-size:18px;color:#a8bfd8;max-width:620px;margin:0 auto 44px;line-height:1.75}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-primary{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;color:#000;background:var(--blue);border:none;border-radius:999px;padding:14px 32px;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-block}
+.btn-primary:hover{background:#33d4ff;box-shadow:0 0 32px rgba(0,200,255,.4)}
+.btn-outline{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;color:var(--blue);border:1px solid rgba(0,200,255,.4);border-radius:999px;padding:14px 32px;background:none;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-block}
+.btn-outline:hover{background:rgba(0,200,255,.08);border-color:var(--blue)}
+.hero-stats{display:flex;gap:48px;justify-content:center;margin-top:64px;flex-wrap:wrap}
+.hero-stat .num{font-family:'Orbitron',sans-serif;font-size:28px;font-weight:900;color:var(--blue)}
+.hero-stat .lbl{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.2em;color:#a8bfd8;margin-top:4px}
+
+/* ── SECTIONS ── */
+.section{position:relative;z-index:1;padding:90px 24px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-kicker{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--blue);margin-bottom:14px;text-align:center}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(24px,4vw,40px);font-weight:900;letter-spacing:.05em;color:#fff;text-align:center;margin-bottom:16px}
+.section-line{display:block;width:60px;height:2px;background:linear-gradient(90deg,var(--blue),transparent);margin:0 auto 24px}
+.section-sub{font-size:16px;color:#a8bfd8;text-align:center;max-width:660px;margin:0 auto 56px;line-height:1.75}
+
+/* ── MISSION BAND ── */
+.mission-band{background:linear-gradient(135deg,rgba(0,200,255,.06),rgba(168,85,247,.05),rgba(10,21,53,.98));border:1px solid rgba(0,200,255,.14);border-radius:20px;padding:52px 44px;max-width:960px;margin:0 auto;text-align:center}
+.mission-quote{font-family:'Orbitron',sans-serif;font-size:clamp(16px,2.5vw,22px);font-weight:700;color:#fff;line-height:1.55;margin-bottom:20px;letter-spacing:.03em}
+.mission-quote span{color:var(--blue)}
+.mission-sub{font-size:15px;color:#a8bfd8;line-height:1.7;max-width:600px;margin:0 auto}
+
+/* ── DISCIPLINES GRID ── */
+.disc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto}
+.disc-card{background:var(--bg-card);border-radius:18px;padding:32px 26px;border:1px solid rgba(0,200,255,.1);position:relative;overflow:hidden;transition:transform .3s,border-color .3s;cursor:pointer}
+.disc-card:hover{transform:translateY(-5px)}
+.disc-card::before{content:'';position:absolute;inset:0;border-radius:18px;opacity:0;transition:opacity .3s;pointer-events:none}
+.disc-card:hover::before{opacity:1}
+.disc-card.mind{border-color:rgba(168,85,247,.15)}.disc-card.mind::before{background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.1),transparent 60%)}
+.disc-card.mind:hover{border-color:rgba(168,85,247,.35)}
+.disc-card.body{border-color:rgba(0,232,124,.12)}.disc-card.body::before{background:radial-gradient(ellipse at 50% 0%,rgba(0,232,124,.08),transparent 60%)}
+.disc-card.body:hover{border-color:rgba(0,232,124,.3)}
+.disc-card.tech{border-color:rgba(0,200,255,.12)}.disc-card.tech::before{background:radial-gradient(ellipse at 50% 0%,rgba(0,200,255,.08),transparent 60%)}
+.disc-card.tech:hover{border-color:rgba(0,200,255,.32)}
+.disc-card.earth{border-color:rgba(245,197,24,.1)}.disc-card.earth::before{background:radial-gradient(ellipse at 50% 0%,rgba(245,197,24,.06),transparent 60%)}
+.disc-card.earth:hover{border-color:rgba(245,197,24,.28)}
+.disc-num{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;margin-bottom:10px}
+.disc-card.mind .disc-num{color:var(--purple)}
+.disc-card.body .disc-num{color:var(--green)}
+.disc-card.tech .disc-num{color:var(--blue)}
+.disc-card.earth .disc-num{color:var(--gold)}
+.disc-icon{font-size:38px;display:block;margin-bottom:14px}
+.disc-title{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;letter-spacing:.06em;color:#fff;margin-bottom:10px}
+.disc-desc{font-size:14px;color:#a8bfd8;line-height:1.65;margin-bottom:16px}
+.disc-modules{display:flex;gap:7px;flex-wrap:wrap}
+.dmod{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.12em;padding:4px 10px;border-radius:999px;border:1px solid}
+.disc-card.mind .dmod{color:var(--purple);border-color:rgba(168,85,247,.3);background:rgba(168,85,247,.07)}
+.disc-card.body .dmod{color:var(--green);border-color:rgba(0,232,124,.25);background:rgba(0,232,124,.06)}
+.disc-card.tech .dmod{color:var(--blue);border-color:rgba(0,200,255,.25);background:rgba(0,200,255,.06)}
+.disc-card.earth .dmod{color:var(--gold);border-color:rgba(245,197,24,.25);background:rgba(245,197,24,.06)}
+.disc-karma{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:900;margin-top:14px;display:block}
+.disc-card.mind .disc-karma{color:var(--purple)}
+.disc-card.body .disc-karma{color:var(--green)}
+.disc-card.tech .disc-karma{color:var(--blue)}
+.disc-card.earth .disc-karma{color:var(--gold)}
+
+/* ── COURSES ── */
+.courses-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;max-width:1100px;margin:0 auto}
+.course-card{background:var(--bg-card);border-radius:16px;overflow:hidden;border:1px solid rgba(0,200,255,.1);transition:border-color .3s,transform .3s}
+.course-card:hover{border-color:rgba(0,200,255,.28);transform:translateY(-4px)}
+.course-header{padding:24px 22px 16px;position:relative}
+.course-level{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.2em;padding:4px 10px;border-radius:999px;display:inline-block;margin-bottom:10px}
+.level-begin{color:var(--green);background:rgba(0,232,124,.08);border:1px solid rgba(0,232,124,.2)}
+.level-inter{color:var(--blue);background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2)}
+.level-adv{color:var(--purple);background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2)}
+.level-master{color:var(--gold);background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.2)}
+.course-icon{font-size:32px;position:absolute;top:20px;right:20px}
+.course-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:.04em;line-height:1.4;margin-bottom:8px}
+.course-meta{font-family:'Share Tech Mono',monospace;font-size:10px;color:#6a80a8;margin-bottom:10px}
+.course-desc{font-size:14px;color:#a8bfd8;line-height:1.6;padding:0 22px 16px}
+.course-footer{padding:14px 22px 18px;border-top:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:space-between}
+.course-karma{font-family:'Orbitron',sans-serif;font-size:14px;font-weight:900;color:var(--blue)}
+.course-btn{font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.1em;color:#000;background:var(--blue);border:1px solid transparent;border-radius:999px;padding:9px 20px;cursor:pointer;transition:background .2s}
+.course-btn:hover{background:#33d4ff}
+.course-btn:disabled{background:transparent;border-color:rgba(0,200,255,.5);color:#a8bfd8;cursor:not-allowed}
+
+/* ── TEACH ── */
+.teach-band{background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(10,21,53,.97));border:1px solid rgba(168,85,247,.2);border-radius:20px;padding:52px 44px;max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr auto;gap:32px;align-items:center}
+@media(max-width:680px){.teach-band{grid-template-columns:1fr}}
+.teach-text h2{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:.05em;margin-bottom:14px}
+.teach-text p{font-size:15px;color:#a8bfd8;line-height:1.7;margin-bottom:22px}
+.teach-perks{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+.teach-perk{display:flex;align-items:center;gap:10px;font-size:14px;color:#a8bfd8}
+.teach-perk::before{content:'⚡';font-size:14px;flex-shrink:0}
+.teach-karma-block{text-align:center;flex-shrink:0;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:16px;padding:28px 32px}
+.teach-karma-num{font-family:'Orbitron',sans-serif;font-size:40px;font-weight:900;color:var(--purple);display:block;text-shadow:0 0 30px rgba(168,85,247,.4)}
+.teach-karma-lbl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.2em;color:#a8bfd8;display:block;margin-top:6px}
+
+/* ── JOBS PATH ── */
+.jobs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;max-width:1100px;margin:0 auto 48px}
+.job-card{background:var(--bg-card);border-radius:16px;padding:28px 22px;border:1px solid rgba(245,197,24,.12);text-align:center;transition:border-color .3s,transform .3s}
+.job-card:hover{border-color:rgba(245,197,24,.3);transform:translateY(-4px)}
+.job-icon{font-size:36px;margin-bottom:14px;display:block}
+.job-title{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:#fff;letter-spacing:.04em;margin-bottom:10px}
+.job-desc{font-size:14px;color:#a8bfd8;line-height:1.6}
+.job-tag{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gold);background:rgba(245,197,24,.07);border:1px solid rgba(245,197,24,.2);border-radius:999px;padding:4px 10px;display:inline-block;margin-top:14px}
+
+/* ── KARMA BAND ── */
+.karma-chips-wrap{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;max-width:1100px;margin:0 auto}
+.kchip{background:var(--bg-card);border-radius:14px;padding:22px 18px;text-align:center;flex:1;min-width:140px;max-width:190px;border:1px solid rgba(0,200,255,.15)}
+.kchip-num{font-family:'Orbitron',sans-serif;font-size:24px;font-weight:900;color:var(--blue);display:block;margin-bottom:6px}
+.kchip-act{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.14em;color:#a8bfd8;display:block}
+.kchip.teach{border-color:rgba(168,85,247,.2)}.kchip.teach .kchip-num{color:var(--purple)}
+.kchip.gold{border-color:rgba(245,197,24,.18)}.kchip.gold .kchip-num{color:var(--gold)}
+
+/* ── ECOSYSTEM ── */
+.eco-band{background:linear-gradient(135deg,rgba(0,200,255,.04),rgba(10,21,53,.98));border-top:1px solid rgba(0,200,255,.1);border-bottom:1px solid rgba(0,200,255,.1);padding:64px 24px}
+.eco-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:680px){.eco-inner{grid-template-columns:1fr}}
+.eco-text h2{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:14px;letter-spacing:.04em}
+.eco-text p{font-size:15px;color:#a8bfd8;line-height:1.7;margin-bottom:24px}
+.eco-links{display:flex;flex-direction:column;gap:10px}
+.eco-link{display:flex;align-items:center;gap:12px;background:var(--bg-card);border-radius:12px;padding:14px 18px;border:1px solid rgba(255,255,255,.06);transition:border-color .3s;text-decoration:none}
+.eco-link:hover{border-color:rgba(0,200,255,.25)}
+.eco-link-icon{font-size:20px;flex-shrink:0}
+.eco-link-info .name{font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:#fff;letter-spacing:.04em}
+.eco-link-info .desc{font-family:'Share Tech Mono',monospace;font-size:10px;color:#6a80a8;margin-top:2px}
+.eco-stats-block{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.eco-stat{background:var(--bg-card);border-radius:14px;padding:22px;border:1px solid rgba(0,200,255,.1);text-align:center}
+.eco-stat .n{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:var(--blue);display:block}
+.eco-stat .l{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:.16em;color:#a8bfd8;margin-top:4px;display:block}
+
+/* ── MODAL ── */
+.av-modal-overlay{position:fixed;inset:0;z-index:999;background:rgba(3,7,20,.82);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s}
+.av-modal-overlay.open{opacity:1;pointer-events:all}
+.av-modal-box{background:#0a1535;border:1px solid rgba(0,200,255,.2);border-radius:20px;padding:40px 36px;width:min(420px,92vw);position:relative;transform:translateY(20px);transition:transform .3s}
+.av-modal-overlay.open .av-modal-box{transform:translateY(0)}
+.av-modal-close{position:absolute;top:16px;right:18px;background:none;border:none;color:#a8bfd8;font-size:20px;cursor:pointer;opacity:.6;transition:opacity .2s}
+.av-modal-close:hover{opacity:1}
+.av-modal-kicker{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--blue);margin-bottom:12px}
+.av-modal-title{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:900;letter-spacing:.06em;color:#fff;margin-bottom:6px}
+.av-modal-sub{font-size:14px;color:#a8bfd8;margin-bottom:28px;line-height:1.6}
+.av-field{display:block;width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:10px;padding:13px 16px;color:#fff;font-family:'Rajdhani',sans-serif;font-size:15px;margin-bottom:14px;outline:none;transition:border-color .2s}
+.av-field:focus{border-color:rgba(0,200,255,.5)}
+.av-field::placeholder{color:#4a5a78}
+.av-submit-btn{width:100%;background:var(--blue);border:none;border-radius:10px;padding:14px;font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:.14em;color:#000;cursor:pointer;transition:all .2s;margin-top:4px}
+.av-submit-btn:hover{background:#33d4ff;box-shadow:0 0 24px rgba(0,200,255,.3)}
+.av-submit-btn:disabled{opacity:.45;cursor:not-allowed}
+.av-error{font-size:15px;color:#ff5fa0;min-height:18px;margin-top:10px;text-align:center}
+.av-modal-footer{font-size:12px;color:#a8bfd8;text-align:center;margin-top:16px}
+.av-modal-footer a{color:var(--blue);text-decoration:none}
+.av-modal-footer a:hover{text-decoration:underline}
+
+/* ── KARMA TOAST ── */
+.karma-toast{position:fixed;bottom:28px;right:28px;z-index:998;background:#0a1535;border:1px solid rgba(0,200,255,.3);border-radius:16px;padding:16px 22px;display:flex;align-items:center;gap:14px;box-shadow:0 8px 40px rgba(0,200,255,.12);opacity:0;transform:translateY(20px);transition:opacity .4s,transform .4s;pointer-events:none}
+.karma-toast.show{opacity:1;transform:translateY(0)}
+.kt-icon{font-size:24px}
+.kt-label{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.18em;color:var(--blue);display:block}
+.kt-amount{font-family:'Orbitron',sans-serif;font-size:22px;font-weight:900;color:var(--purple);display:block}
+.kt-msg{font-family:'Share Tech Mono',monospace;font-size:10px;color:#a8bfd8;display:block}
+
+/* ── FOOTER ── */
+footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid rgba(0,200,255,.08)}
+.footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
+@media(max-width:760px){.footer-inner{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.footer-inner{grid-template-columns:1fr}}
+.footer-brand{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;letter-spacing:.12em;color:#fff;margin-bottom:12px}
+.footer-brand span{color:var(--blue)}
+.footer-about{font-size:14px;color:#a8bfd8;line-height:1.7;max-width:280px}
+.footer-col-title{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.22em;color:var(--blue);margin-bottom:14px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:9px}
+.footer-links a{font-size:14px;color:#a8bfd8;text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--blue)}
+.footer-bottom{max-width:1100px;margin:40px auto 0;padding-top:24px;border-top:1px solid rgba(255,255,255,.05);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-copy{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.12em;color:#4a5a78}
+.footer-web4{font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:.14em;color:rgba(0,200,255,.4)}
+
+@media(max-width:520px){.section{padding:64px 16px}.section-inner{padding:0 .75rem}.hero{padding:100px 16px 60px}}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-brand" href="#"><span>⚡</span> JUSTICE LEAGUE <span>ACADEMY</span></a>
+  <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#disciplines">Disciplines</a></li>
+    <li><a href="#courses">Courses</a></li>
+    <li><a href="#coders">4*Coders</a></li>
+    <li><a href="#techmodules">Tech Modules</a></li>
+    <li><a href="#teach">Teach</a></li>
+    <li><a href="#jobs">Jobs</a></li>
+    <li><a href="#karma">Karma</a></li>
+    <li><a href="#thejlaway">The JLA Way</a></li>
+    <li class="nav-links-mobile-only"><a href="#courses">Start Training</a></li>
+  </ul>
+  <div class="nav-right"><a class="nav-cta" href="#courses">⚡ Start Training</a></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-kicker">POWERED BY OASIS WEB4 · OPEN TO EVERY PERSON ON EARTH · NO EXPERIENCE NEEDED · NO EXCEPTIONS</div>
+    <h1 class="hero-title">
+      Train your mind.<br>
+      <span class="b">Train your body.</span><br>
+      <span class="p">Find your gift.</span>
+    </h1>
+    <p class="hero-sub">Justice League Academy is a free, open superhero training platform for <strong>every walk of life</strong> — including people with special needs, those experiencing homelessness, and everyone the world has forgotten or turned its back on. No experience. No prerequisites. No judgement. Just your next chapter.</p>
+    <div class="hero-btns">
+      <a class="btn-primary" href="#disciplines">EXPLORE DISCIPLINES</a>
+      <a class="btn-outline" href="#teach">TEACH A CLASS</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num">240+</div><div class="lbl">Classes Available</div></div>
+      <div class="hero-stat"><div class="num">38K</div><div class="lbl">Students Enrolled</div></div>
+      <div class="hero-stat"><div class="num">112</div><div class="lbl">Countries</div></div>
+      <div class="hero-stat"><div class="num">∞</div><div class="lbl">Potential in You</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECOND CHANCE CALLOUT -->
+<section class="section" style="padding-bottom:0;padding-top:60px">
+  <div class="section-inner">
+    <div style="background:linear-gradient(135deg,rgba(0,200,255,.07),rgba(168,85,247,.07));border:1px solid rgba(0,200,255,.2);border-radius:20px;padding:48px 44px;max-width:960px;margin:0 auto;text-align:center">
+      <div style="font-family:'Orbitron',sans-serif;font-size:10px;letter-spacing:.28em;color:var(--blue);margin-bottom:18px">FOR EVERYONE — NO EXCEPTIONS</div>
+      <h2 style="font-family:'Orbitron',sans-serif;font-size:clamp(20px,3.5vw,34px);font-weight:900;color:#fff;line-height:1.25;margin-bottom:24px">JLA is for <em style="color:var(--blue)">every</em> walk of life</h2>
+      <p style="font-size:16px;color:#a8bfd8;line-height:1.8;max-width:700px;margin:0 auto 20px">Whether you are a complete beginner, have special needs, are experiencing homelessness, or are simply someone the world has overlooked and turned its back on — <strong style="color:#fff">you belong here.</strong></p>
+      <p style="font-size:16px;color:#a8bfd8;line-height:1.8;max-width:700px;margin:0 auto 28px">This is your <strong style="color:#fff">second chance.</strong> Your opportunity to step up, prove them all wrong, and show the world — and yourself — exactly what you are made of. Because <strong style="color:#fff">everyone has a gift waiting to be discovered.</strong> We will help you find yours.</p>
+      <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px">
+        <span style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);border-radius:999px;padding:8px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--blue)">⚡ Special Needs Welcome</span>
+        <span style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);border-radius:999px;padding:8px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--blue)">⚡ Homeless &amp; Disadvantaged</span>
+        <span style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);border-radius:999px;padding:8px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--blue)">⚡ No Experience Needed</span>
+        <span style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);border-radius:999px;padding:8px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--blue)">⚡ No Age Limit</span>
+        <span style="background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);border-radius:999px;padding:8px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--blue)">⚡ 100% Free to Join</span>
+        <span style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:999px;padding:8px 20px;font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--purple)">✦ Everyone Has a Gift</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section class="section" style="padding-bottom:0">
+  <div class="section-inner">
+    <div class="mission-band">
+      <p class="mission-quote">"We believe in you <span>even if you don't yet.</span><br>We wish to find your gift for the world."</p>
+    </div>
+  </div>
+</section>
+
+<!-- DISCIPLINES -->
+<section class="section" id="disciplines">
+  <div class="section-inner">
+    <div class="section-kicker">WHAT YOU CAN LEARN</div>
+    <h2 class="section-title">Six Paths to Mastery</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">Every discipline earns karma. Progress through modules, complete assessments, teach others — and watch your karma and your life transform together.</p>
+
+    <div class="disc-grid">
+      <div class="disc-card mind">
+        <div class="disc-num">PATH 01 — MIND</div>
+        <span class="disc-icon">🧘</span>
+        <div class="disc-title">Mind & Spirit</div>
+        <p class="disc-desc">Develop inner power, clarity and peace. Mindfulness, meditation, conscious awareness, emotional intelligence and energy work — the foundation every hero needs.</p>
+        <div class="disc-modules">
+          <span class="dmod">MINDFULNESS</span>
+          <span class="dmod">MEDITATION</span>
+          <span class="dmod">EMOTIONAL IQ</span>
+          <span class="dmod">ENERGY WORK</span>
+          <span class="dmod">BREATHWORK</span>
+          <span class="dmod">HEALING</span>
+        </div>
+        <span class="disc-karma">+100–+400 KARMA PER MODULE</span>
+      </div>
+
+      <div class="disc-card body">
+        <div class="disc-num">PATH 02 — BODY</div>
+        <span class="disc-icon">🌿</span>
+        <div class="disc-title">Body & Earth</div>
+        <p class="disc-desc">Physical strength, nutrition and connection to the natural world. Yoga, movement, healthy eating, herbalism, foraging, survival and wilderness skills.</p>
+        <div class="disc-modules">
+          <span class="dmod">YOGA</span>
+          <span class="dmod">NUTRITION</span>
+          <span class="dmod">SURVIVAL</span>
+          <span class="dmod">FORAGING</span>
+          <span class="dmod">HERBALISM</span>
+          <span class="dmod">FORESTRY</span>
+        </div>
+        <span class="disc-karma">+100–+400 KARMA PER MODULE</span>
+      </div>
+
+      <div class="disc-card tech">
+        <div class="disc-num">PATH 03 — TECH</div>
+        <span class="disc-icon">💻</span>
+        <div class="disc-title">Conscious Coding</div>
+        <p class="disc-desc">Technology in service of humanity. Learn to code with purpose — web, AI, blockchain, game dev and more. Build tools that heal the world, not harm it.</p>
+        <div class="disc-modules">
+          <span class="dmod">WEB DEV</span>
+          <span class="dmod">AI / ML</span>
+          <span class="dmod">BLOCKCHAIN</span>
+          <span class="dmod">GAME DEV</span>
+          <span class="dmod">OASIS API</span>
+          <span class="dmod">OPEN SOURCE</span>
+        </div>
+        <span class="disc-karma">+150–+500 KARMA PER MODULE</span>
+      </div>
+
+      <div class="disc-card earth">
+        <div class="disc-num">PATH 04 — SERVICE</div>
+        <span class="disc-icon">🌍</span>
+        <div class="disc-title">Service & Leadership</div>
+        <p class="disc-desc">Lead with love. Community organising, conflict resolution, social entrepreneurship, fundraising for good causes, and building the movements that change the world.</p>
+        <div class="disc-modules">
+          <span class="dmod">LEADERSHIP</span>
+          <span class="dmod">COMMUNITY</span>
+          <span class="dmod">FUNDRAISING</span>
+          <span class="dmod">ACTIVISM</span>
+          <span class="dmod">MENTORING</span>
+          <span class="dmod">DIPLOMACY</span>
+        </div>
+        <span class="disc-karma">+100–+500 KARMA PER MODULE</span>
+      </div>
+
+      <div class="disc-card mind">
+        <div class="disc-num">PATH 05 — ARTS</div>
+        <span class="disc-icon">🎨</span>
+        <div class="disc-title">Arts & Expression</div>
+        <p class="disc-desc">Creativity is a superpower. Music, visual art, animation, 3D modelling, graphic design, writing and storytelling — use your gifts to inspire, uplift and transform.</p>
+        <div class="disc-modules">
+          <span class="dmod">MUSIC</span>
+          <span class="dmod">ANIMATION</span>
+          <span class="dmod">3D MODELLING</span>
+          <span class="dmod">GRAPHIC DESIGN</span>
+          <span class="dmod">WRITING</span>
+          <span class="dmod">STORYTELLING</span>
+        </div>
+        <span class="disc-karma">+100–+400 KARMA PER MODULE</span>
+      </div>
+
+      <div class="disc-card tech">
+        <div class="disc-num">PATH 06 — SCIENCE</div>
+        <span class="disc-icon">🔬</span>
+        <div class="disc-title">Science & Innovation</div>
+        <p class="disc-desc">Invent the future. Explore biology, ecology, renewable energy, quantum science and emerging technologies. Use knowledge to heal people and the planet.</p>
+        <div class="disc-modules">
+          <span class="dmod">BIOLOGY</span>
+          <span class="dmod">ECOLOGY</span>
+          <span class="dmod">CLEAN ENERGY</span>
+          <span class="dmod">QUANTUM</span>
+          <span class="dmod">INVENTION</span>
+          <span class="dmod">RESEARCH</span>
+        </div>
+        <span class="disc-karma">+150–+500 KARMA PER MODULE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section class="section" id="courses" style="padding-top:0">
+  <div class="section-inner">
+    <div class="section-kicker">FEATURED CLASSES</div>
+    <h2 class="section-title">Start Learning Today</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">A taste of what's waiting for you. Connect your OASIS avatar to enrol and start earning karma from your very first lesson.</p>
+
+    <div class="courses-grid">
+      <div class="course-card">
+        <div class="course-header">
+          <span class="course-level level-begin">BEGINNER</span>
+          <span class="course-icon">🧘</span>
+          <div class="course-title">Introduction to Mindfulness</div>
+          <div class="course-meta">8 MODULES · 4 HOURS · MIND PATH</div>
+        </div>
+        <p class="course-desc">Learn the fundamentals of present-moment awareness. Simple practices you can start using in daily life from day one — no prior experience needed.</p>
+        <div class="course-footer">
+          <span class="course-karma">+200 KARMA</span>
+          <button class="course-btn" id="btn-mindfulness" disabled>CONNECT TO ENROL</button>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-header">
+          <span class="course-level level-begin">BEGINNER</span>
+          <span class="course-icon">🌿</span>
+          <div class="course-title">Plant-Based Nutrition</div>
+          <div class="course-meta">12 MODULES · 6 HOURS · BODY PATH</div>
+        </div>
+        <p class="course-desc">Understand how food affects your body, mind and the planet. Practical meal planning, nutritional science and how to eat well on any budget.</p>
+        <div class="course-footer">
+          <span class="course-karma">+250 KARMA</span>
+          <button class="course-btn" id="btn-nutrition" disabled>CONNECT TO ENROL</button>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-header">
+          <span class="course-level level-inter">INTERMEDIATE</span>
+          <span class="course-icon">💻</span>
+          <div class="course-title">Conscious Coding: Web Fundamentals</div>
+          <div class="course-meta">20 MODULES · 12 HOURS · TECH PATH</div>
+        </div>
+        <p class="course-desc">HTML, CSS and JavaScript taught with purpose. Build real projects that help real people. No prior coding experience needed — just curiosity.</p>
+        <div class="course-footer">
+          <span class="course-karma">+400 KARMA</span>
+          <button class="course-btn" id="btn-coding" disabled>CONNECT TO ENROL</button>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-header">
+          <span class="course-level level-inter">INTERMEDIATE</span>
+          <span class="course-icon">🌲</span>
+          <div class="course-title">Wilderness Survival Skills</div>
+          <div class="course-meta">16 MODULES · 10 HOURS · BODY PATH</div>
+        </div>
+        <p class="course-desc">Fire, shelter, water, foraging and navigation. Ancient skills that reconnect you to the earth and prepare you for anything. Practical. Powerful. Primal.</p>
+        <div class="course-footer">
+          <span class="course-karma">+350 KARMA</span>
+          <button class="course-btn" id="btn-survival" disabled>CONNECT TO ENROL</button>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-header">
+          <span class="course-level level-adv">ADVANCED</span>
+          <span class="course-icon">⚡</span>
+          <div class="course-title">Distance Healing Practitioner</div>
+          <div class="course-meta">24 MODULES · 16 HOURS · MIND PATH</div>
+        </div>
+        <p class="course-desc">Advanced energy work and distance healing techniques. Certified completion qualifies you to join the Global Healing Network as a registered healer.</p>
+        <div class="course-footer">
+          <span class="course-karma">+500 KARMA</span>
+          <button class="course-btn" id="btn-healing" disabled>CONNECT TO ENROL</button>
+        </div>
+      </div>
+
+      <div class="course-card">
+        <div class="course-header">
+          <span class="course-level level-master">MASTERY</span>
+          <span class="course-icon">🌍</span>
+          <div class="course-title">Building Movements That Matter</div>
+          <div class="course-meta">18 MODULES · 14 HOURS · SERVICE PATH</div>
+        </div>
+        <p class="course-desc">From local community groups to global campaigns — learn how the most impactful movements in history were built and how you can start yours.</p>
+        <div class="course-footer">
+          <span class="course-karma">+500 KARMA</span>
+          <button class="course-btn" id="btn-movements" disabled>CONNECT TO ENROL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEACH -->
+<section class="section" id="teach">
+  <div class="section-inner">
+    <div class="section-kicker">FOR THE PEOPLE · BY THE PEOPLE</div>
+    <h2 class="section-title">Have Something to Teach?</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">JLA is built by its community. If you have knowledge, a skill or a gift — you can submit a module and teach it. You earn more karma for teaching than for learning.</p>
+    <div class="teach-band">
+      <div class="teach-text">
+        <h2>Share Your Gift.<br>Earn More Karma.</h2>
+        <p>Anyone can submit a class — from a 10-minute guided breathing exercise to a full 20-module mastery programme. Our community reviews and verifies submissions. If it helps people, it gets published.</p>
+        <div class="teach-perks">
+          <div class="teach-perk">No qualifications required — wisdom comes in all forms</div>
+          <div class="teach-perk">Earn karma every time a student completes your module</div>
+          <div class="teach-perk">Top teachers are offered paid roles building OASIS</div>
+          <div class="teach-perk">Your knowledge helps people across 100+ countries</div>
+          <div class="teach-perk">Community review ensures quality — no gatekeeping</div>
+        </div>
+        <button class="btn-primary" id="btn-submit-class" style="border:none;cursor:pointer">SUBMIT A CLASS</button>
+      </div>
+      <div class="teach-karma-block">
+        <span class="teach-karma-num">+750</span>
+        <span class="teach-karma-lbl">KARMA PER MODULE<br>PUBLISHED</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOBS PATH -->
+<section class="section" id="jobs">
+  <div class="section-inner">
+    <div class="section-kicker">YOUR KARMA OPENS DOORS</div>
+    <h2 class="section-title">Earn Your Place at OASIS</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">We don't hire from CVs. We watch what you do. Top students and teachers across JLA, GraceBook, GHN and Noah's Ark can be offered real roles helping us build the OASIS Omniverse.</p>
+
+    <div class="jobs-grid">
+      <div class="job-card">
+        <span class="job-icon">💻</span>
+        <div class="job-title">Conscious Coder</div>
+        <p class="job-desc">Help build the OASIS platform, web apps and tools that serve humanity. From frontend to blockchain — we need builders who care.</p>
+        <span class="job-tag">TECH PATH · 50K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">🎓</span>
+        <div class="job-title">JLA Course Creator</div>
+        <p class="job-desc">Design and lead official JLA programmes. Help us expand into new disciplines and ensure no skill or wisdom goes unshared.</p>
+        <span class="job-tag">ALL PATHS · 30K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">💜</span>
+        <div class="job-title">GHN Healing Coordinator</div>
+        <p class="job-desc">Organise Love Beam sessions, support healers and grow the Global Healing Network's reach to every corner of the world.</p>
+        <span class="job-tag">MIND PATH · 25K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">🐾</span>
+        <div class="job-title">Noah's Ark Field Lead</div>
+        <p class="job-desc">Help open and run Noah's Ark ARN rescue centres globally. Operations, community outreach and animal welfare coordination.</p>
+        <span class="job-tag">SERVICE PATH · 20K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">🌍</span>
+        <div class="job-title">Community Ambassador</div>
+        <p class="job-desc">Represent OASIS in your country or region. Grow the ecosystem, welcome new members and be the face of the Omniverse in your community.</p>
+        <span class="job-tag">SERVICE PATH · 15K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">✦</span>
+        <div class="job-title">GraceBook Mentor</div>
+        <p class="job-desc">Guide new members on GraceBook, help resolve conflicts, champion good deeds and keep the conscious feed exactly what it should be.</p>
+        <span class="job-tag">ALL PATHS · 20K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">🎨</span>
+        <div class="job-title">Creative Director</div>
+        <p class="job-desc">Shape the look, feel and voice of the OASIS Omniverse. Animation, design, storytelling and world-building for a platform used by millions.</p>
+        <span class="job-tag">ARTS PATH · 25K+ KARMA</span>
+      </div>
+      <div class="job-card">
+        <span class="job-icon">🔬</span>
+        <div class="job-title">OASIS Research Lead</div>
+        <p class="job-desc">Drive R&amp;D into next-generation technologies — from clean energy and quantum computing to new hardware that makes OASIS possible.</p>
+        <span class="job-tag">SCIENCE PATH · 40K+ KARMA</span>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:8px">
+      <p style="font-size:15px;color:#a8bfd8;max-width:580px;margin:0 auto;line-height:1.7">Karma thresholds are a guide, not a hard rule. We look at the whole person — what you've built, who you've helped and what you care about. <span style="color:var(--blue)">We believe in you.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- KARMA BAND -->
+<section class="section" id="karma" style="padding-top:0">
+  <div class="section-inner">
+    <div style="background:linear-gradient(135deg,rgba(0,200,255,.05),rgba(168,85,247,.04),rgba(10,21,53,.98));border:1px solid rgba(0,200,255,.14);border-radius:20px;padding:48px 36px;text-align:center">
+      <div class="section-kicker">KARMA AT JLA</div>
+      <h2 class="section-title" style="margin-bottom:8px">Every Step Counts</h2>
+      <span class="section-line"></span>
+      <p class="section-sub" style="margin-bottom:36px">All JLA karma flows directly into your OASIS avatar score — the same score used across GraceBook, GHN, Noah's Ark and Our World.</p>
+      <div class="karma-chips-wrap">
+        <div class="kchip"><span class="kchip-num">+100</span><span class="kchip-act">COMPLETE MODULE</span></div>
+        <div class="kchip"><span class="kchip-num">+200</span><span class="kchip-act">FINISH A COURSE</span></div>
+        <div class="kchip teach"><span class="kchip-num">+400</span><span class="kchip-act">TEACH A LESSON</span></div>
+        <div class="kchip teach"><span class="kchip-num">+750</span><span class="kchip-act">PUBLISH A MODULE</span></div>
+        <div class="kchip gold"><span class="kchip-num">+500</span><span class="kchip-act">HEAL CERTIFICATION</span></div>
+        <div class="kchip gold"><span class="kchip-num">+1000</span><span class="kchip-act">MASTERY ACHIEVED</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECOSYSTEM -->
+<div class="eco-band" id="ecosystem">
+  <div class="eco-inner">
+    <div class="eco-text">
+      <h2>One Karma Score.<br>Every Platform.</h2>
+      <p>Every class you complete at JLA adds to the same OASIS avatar karma score you build on GraceBook, GHN and Noah's Ark. Train here. Heal there. Post goodness everywhere. One score for a whole life lived well.</p>
+      <div class="eco-links">
+        <a class="eco-link" href="#">
+          <span class="eco-link-icon">✦</span>
+          <div class="eco-link-info"><div class="name">GRACEBOOK</div><div class="desc">The conscious social network — good deeds earn karma</div></div>
+        </a>
+        <a class="eco-link" href="#">
+          <span class="eco-link-icon">💜</span>
+          <div class="eco-link-info"><div class="name">GLOBAL HEALING NETWORK</div><div class="desc">Healing certification from JLA qualifies you to join GHN</div></div>
+        </a>
+        <a class="eco-link" href="#">
+          <span class="eco-link-icon">🐾</span>
+          <div class="eco-link-info"><div class="name">NOAH'S ARK ARN</div><div class="desc">Animal care modules link directly to rescue centre volunteering</div></div>
+        </a>
+        <a class="eco-link" href="#">
+          <span class="eco-link-icon">🌍</span>
+          <div class="eco-link-info"><div class="name">OUR WORLD</div><div class="desc">Your karma and skills unlock roles inside the OASIS metaverse</div></div>
+        </a>
+      </div>
+    </div>
+    <div class="eco-stats-block">
+      <div class="eco-stat"><span class="n">4</span><span class="l">LEARNING PATHS</span></div>
+      <div class="eco-stat"><span class="n">240+</span><span class="l">CLASSES</span></div>
+      <div class="eco-stat"><span class="n">FREE</span><span class="l">ALWAYS & FOREVER</span></div>
+      <div class="eco-stat"><span class="n">∞</span><span class="l">YOUR POTENTIAL</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- VISION -->
+<section class="section" id="vision" style="padding-bottom:0">
+  <div class="section-inner">
+    <div class="section-kicker">OUR VISION</div>
+    <h2 class="section-title">Technology in Service of Love</h2>
+    <span class="section-line"></span>
+    <div style="background:linear-gradient(135deg,rgba(0,200,255,.05),rgba(168,85,247,.05),rgba(10,21,53,.98));border:1px solid rgba(0,200,255,.12);border-radius:20px;padding:52px 44px;max-width:960px;margin:0 auto">
+      <p style="font-family:'Orbitron',sans-serif;font-size:clamp(15px,2vw,19px);font-weight:700;color:#fff;line-height:1.6;margin-bottom:28px;letter-spacing:.02em">"As one wise person once said — <span style="color:var(--blue)">'I have a dream'</span>… well, we have a dream too."</p>
+      <p style="font-size:15px;color:#a8bfd8;line-height:1.8;margin-bottom:20px">A vision where we can all co-exist in peace and harmony — not only with ourselves but with the planet. A vision where war, fear and separation are things of the past. A vision where love is the predominant force on Earth.</p>
+      <p style="font-size:15px;color:#a8bfd8;line-height:1.8;margin-bottom:28px">We want to reach this vision by using technology for good rather than evil — to connect people rather than disconnect them, to improve the quality of life for every soul on the planet, and to restore our world to her former beauty.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Use technology for good, never for harm</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Connect people across communities and continents</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Teach mindfulness, meditation, yoga, nutrition and nature</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Give hope and light to those who previously had none</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Bring true equality and equal opportunity for every person</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Believe in everyone — especially those who don't yet believe in themselves</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Help every person find their unique gift for the world</div>
+        <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Use technology to assist humanity — never to replace it</div>
+      </div>
+      <p style="font-size:15px;color:#a8bfd8;line-height:1.8;margin-top:28px;text-align:center">Imagine if all the energy wasted fighting each other was instead pooled together for the common good of all. <span style="color:var(--blue)">Just imagine what we could all achieve working together.</span> We could turn this world around overnight.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CORE VALUES -->
+<section class="section" id="values">
+  <div class="section-inner">
+    <div class="section-kicker">HOW WE OPERATE</div>
+    <h2 class="section-title">Our Core Values</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">These are the values at the heart of everything we do — and everything we encourage every student, teacher and member of the JLA community to embody.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;max-width:900px;margin:0 auto">
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,200,255,.25);color:var(--blue);background:rgba(0,200,255,.06)">RESPECT</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(168,85,247,.25);color:var(--purple);background:rgba(168,85,247,.06)">COMPASSION</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,200,255,.25);color:var(--blue);background:rgba(0,200,255,.06)">INTEGRITY</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,232,124,.2);color:var(--green);background:rgba(0,232,124,.05)">HONESTY</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,200,255,.25);color:var(--blue);background:rgba(0,200,255,.06)">RESPONSIBILITY</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(168,85,247,.25);color:var(--purple);background:rgba(168,85,247,.06)">KINDNESS</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,232,124,.2);color:var(--green);background:rgba(0,232,124,.05)">FORGIVENESS</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(245,197,24,.22);color:var(--gold);background:rgba(245,197,24,.05)">JOY</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(245,197,24,.22);color:var(--gold);background:rgba(245,197,24,.05)">HAPPINESS</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(168,85,247,.25);color:var(--purple);background:rgba(168,85,247,.06)">PEACE</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,200,255,.25);color:var(--blue);background:rgba(0,200,255,.06)">WISDOM</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,232,124,.2);color:var(--green);background:rgba(0,232,124,.05)">TEAMWORK</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,200,255,.25);color:var(--blue);background:rgba(0,200,255,.06)">INITIATIVE</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(245,197,24,.22);color:var(--gold);background:rgba(245,197,24,.05)">CONFIDENCE</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(168,85,247,.25);color:var(--purple);background:rgba(168,85,247,.06)">LOVE</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,232,124,.2);color:var(--green);background:rgba(0,232,124,.05)">UNITY</span>
+      <span style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:.14em;padding:10px 20px;border-radius:999px;border:1px solid rgba(0,200,255,.25);color:var(--blue);background:rgba(0,200,255,.06)">HARMONY</span>
+    </div>
+  </div>
+</section>
+
+<!-- ORIGINS BAND -->
+<section class="section" id="origins" style="padding-top:0">
+  <div class="section-inner">
+    <div style="background:linear-gradient(135deg,rgba(0,200,255,.06),rgba(168,85,247,.05),rgba(10,21,53,.98));border:1px solid rgba(0,200,255,.18);border-radius:20px;padding:48px 40px;text-align:center;max-width:860px;margin:0 auto">
+      <div style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.12em;margin-bottom:16px">WHERE IT ALL BEGAN</div>
+      <h2 style="font-family:'Orbitron',sans-serif;font-size:clamp(20px,3vw,30px);font-weight:700;color:#fff;margin:0 0 14px">The Founding Documents</h2>
+      <p style="font-size:15px;color:#a8bfd8;line-height:1.7;max-width:620px;margin:0 auto 32px">JLA grew out of the original NextGen Developers Training Programme — first created in 2013 as a free, open, love-driven initiative to give everyone the chance they were never given. These are the documents it was built on.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;justify-content:center">
+        <a href="https://c8119036-8b0a-4498-ab07-331841f19b4b.filesusr.com/ugd/4280d8_ad8787bd42b1471bae73003bfbf111f7.pdf" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.35);border-radius:10px;padding:14px 24px;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.06em;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(0,200,255,.2)'" onmouseout="this.style.background='rgba(0,200,255,.1)'">
+          <span style="font-size:20px">📄</span> TRAINING PROGRAMME v1.6 ↗
+        </a>
+        <a href="https://c8119036-8b0a-4498-ab07-331841f19b4b.filesusr.com/ugd/4280d8_999d98ba615e4fa6ab4383a415ee24c5.pdf" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.35);border-radius:10px;padding:14px 24px;font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;color:var(--purple);letter-spacing:.06em;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(168,85,247,.2)'" onmouseout="this.style.background='rgba(168,85,247,.1)'">
+          <span style="font-size:20px">📄</span> JUNIOR PROGRAMME v1.6 ↗
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- *4CODERS SERIES -->
+<section class="section" id="coders" style="padding-top:0">
+  <div class="section-inner">
+    <div class="section-kicker">THE CONSCIOUS CODER SERIES</div>
+    <h2 class="section-title">Holistic Skills for Holistic Coders</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">Our unique *4Coders modules prove what we've always known: happier, healthier, more balanced people make better developers. These are built into your training day — not extras you have to find time for.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto">
+      <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.2);border-radius:16px;padding:28px 22px">
+        <div style="font-size:32px;margin-bottom:12px">🧘</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--purple);letter-spacing:.06em;margin-bottom:10px">YOGA4CODERS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Yoga dramatically improves focus, attention and energy levels. This module dives deep into how yoga benefits not just your physical and mental health — but directly improves your coding. Most people are not aware of how many benefits yoga gives you.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.18);border-radius:16px;padding:28px 22px">
+        <div style="font-size:32px;margin-bottom:12px">🧠</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">MEDITATION4CODERS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Meditation improves mental clarity, emotional resilience and creative problem-solving — all critical coding skills. Learn how a consistent practice makes you not only a better developer but a calmer, happier human being.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,232,124,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:32px;margin-bottom:12px">🌿</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--green);letter-spacing:.06em;margin-bottom:10px">MINDFULNESS4CODERS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Present-moment awareness transforms how you write code — fewer bugs, better focus, deeper flow states. Mindfulness is a superpower for any developer. This module shows you how to build it into your working day.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(245,197,24,.18);border-radius:16px;padding:28px 22px">
+        <div style="font-size:32px;margin-bottom:12px">🥗</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:10px">NUTRITION4CODERS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">What you eat directly affects cognitive function, energy levels and mood. Learn how the right nutrition supercharges your brain and your output. Your code is only as good as the fuel behind it.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.2);border-radius:16px;padding:28px 22px">
+        <div style="font-size:32px;margin-bottom:12px">🌍</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--purple);letter-spacing:.06em;margin-bottom:10px">HOLISTICLIFESTYLE4CODERS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">The full picture — combining yoga, meditation, mindfulness, nutrition and being in nature into a holistic daily practice that makes you effective, energised and at peace. The Conscious Programming Methodology in full.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.18);border-radius:16px;padding:28px 22px">
+        <div style="font-size:32px;margin-bottom:12px">💃</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">DANCE4CODERS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Dance is one of the most powerful healing modalities on earth. It releases energy blocks, boosts creativity, elevates mood and reconnects you to joy. A joyful coder is a creative coder. Come dance your way to better code.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL TECH MODULES -->
+<section class="section" id="techmodules" style="padding-top:0">
+  <div class="section-inner">
+    <div class="section-kicker">CONSCIOUS CODING PATH — FULL MODULE LIST</div>
+    <h2 class="section-title">Every Tech Stack. Every Level.</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">From absolute beginner to bleeding-edge advanced. Every module is practical, purposeful and connected to real projects that help real people.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1100px;margin:0 auto;align-items:stretch">
+      <!-- BEGINNER -->
+      <div style="background:var(--bg-card);border:1px solid rgba(0,232,124,.18);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column">
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--green);margin-bottom:18px">BEGINNER</div>
+        <div style="display:flex;flex-direction:column;gap:11px;flex:1">
+          <span style="font-size:15px;color:#a8bfd8">🖥 What's a Computer?</span>
+          <span style="font-size:15px;color:#a8bfd8">⌨️ The Basics of Programming</span>
+          <span style="font-size:15px;color:#a8bfd8">🧘 Mindful Programming</span>
+          <span style="font-size:15px;color:#a8bfd8">🌐 HTML 5 / CSS 3 / JavaScript</span>
+          <span style="font-size:15px;color:#a8bfd8">🐍 Python Fundamentals</span>
+          <span style="font-size:15px;color:#a8bfd8">🗄️ Databases &amp; SQL</span>
+          <span style="font-size:15px;color:#a8bfd8">🐙 Git &amp; Version Control</span>
+          <span style="font-size:15px;color:#a8bfd8">🎨 UI / UX Design Basics</span>
+        </div>
+      </div>
+      <!-- INTERMEDIATE -->
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.18);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column">
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--blue);margin-bottom:18px">INTERMEDIATE</div>
+        <div style="display:flex;flex-direction:column;gap:11px;flex:1">
+          <span style="font-size:15px;color:#a8bfd8">⚡ C# / .NET — Core Module</span>
+          <span style="font-size:15px;color:#a8bfd8">🎮 Unity Game Engine</span>
+          <span style="font-size:15px;color:#a8bfd8">⚛️ React / React Native</span>
+          <span style="font-size:15px;color:#a8bfd8">🔷 Blazor / WebAssembly</span>
+          <span style="font-size:15px;color:#a8bfd8">📱 .NET MAUI / Cross-Platform</span>
+          <span style="font-size:15px;color:#a8bfd8">🤖 AI / Machine Learning</span>
+          <span style="font-size:15px;color:#a8bfd8">🧠 Prompt Engineering &amp; LLMs</span>
+          <span style="font-size:15px;color:#a8bfd8">☁️ Cloud &amp; DevOps (AWS / Azure)</span>
+          <span style="font-size:15px;color:#a8bfd8">🔗 Holochain / hApps</span>
+          <span style="font-size:15px;color:#a8bfd8">⛓️ Ethereum / Solidity</span>
+          <span style="font-size:15px;color:#a8bfd8">🌐 Web3 &amp; Decentralised Apps</span>
+          <span style="font-size:15px;color:#a8bfd8">🌍 VERSES Spatial Web</span>
+          <span style="font-size:15px;color:#a8bfd8">🌱 SEEDS / ThreeFold / Regenerative Tech</span>
+          <span style="font-size:15px;color:#a8bfd8">🎨 Animation Specialist</span>
+          <span style="font-size:15px;color:#a8bfd8">🗿 3D Modelling</span>
+          <span style="font-size:15px;color:#a8bfd8">🖌️ Graphic Design</span>
+        </div>
+      </div>
+      <!-- ADVANCED -->
+      <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.2);border-radius:14px;padding:28px 24px;display:flex;flex-direction:column">
+        <div style="font-family:'Orbitron',sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--purple);margin-bottom:18px">ADVANCED</div>
+        <div style="display:flex;flex-direction:column;gap:11px;flex:1">
+          <span style="font-size:15px;color:#a8bfd8">🤖 AI Agent Development</span>
+          <span style="font-size:15px;color:#a8bfd8">🧬 AI Model Fine-Tuning &amp; Training</span>
+          <span style="font-size:15px;color:#a8bfd8">🔮 N6i Engine — Next Gen Tech</span>
+          <span style="font-size:15px;color:#a8bfd8">🧬 NGREFS — Real-time Emotional Feedback</span>
+          <span style="font-size:15px;color:#a8bfd8">🔥 C++ / Direct3D</span>
+          <span style="font-size:15px;color:#a8bfd8">🎮 Unreal Engine 5</span>
+          <span style="font-size:15px;color:#a8bfd8">🕶️ AR / VR / XR Development</span>
+          <span style="font-size:15px;color:#a8bfd8">🌌 Spatial Computing</span>
+          <span style="font-size:15px;color:#a8bfd8">⚛️ Quantum Computing Foundations</span>
+          <span style="font-size:15px;color:#a8bfd8">🔒 Cybersecurity &amp; Ethical Hacking</span>
+          <span style="font-size:15px;color:#a8bfd8">🚀 OASIS Web 4 / 5 / 6 API</span>
+        </div>
+      </div>
+    </div>
+    <div style="background:rgba(168,85,247,.05);border:1px solid rgba(168,85,247,.15);border-radius:14px;padding:18px 24px;max-width:1100px;margin:16px auto 0">
+      <p style="font-size:14px;color:#a8bfd8;line-height:1.65;font-style:italic;margin:0">📝 Module content evolves constantly — this is a living curriculum built by the community, for the community. Have a skill to teach? <a href="#teach" style="color:var(--purple);text-decoration:none">Submit a module →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT YOU GET -->
+<section class="section" id="whatyouget" style="padding-top:0">
+  <div class="section-inner">
+    <div class="section-kicker">WHAT YOU WILL GET</div>
+    <h2 class="section-title">So Much More Than a Course</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">JLA isn't just training. It's a whole new way of learning, living and contributing — designed around you as a human being, not as a resource.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto">
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.12);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">💼</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">REAL-WORLD EXPERIENCE</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Part of your practical training will be on actual real commercial projects — the kind employers love and CVs can't fake. You'll feel genuinely productive from day one.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(245,197,24,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">💰</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:10px">EARN WHILE YOU LEARN</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Once you reach a certain proficiency level you start getting paid while you continue to learn and grow. The more modules you complete, the more you earn.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,232,124,.12);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">⏰</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--green);letter-spacing:.06em;margin-bottom:10px">NO TIME RESTRICTIONS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Fit the course around your life — not the other way round. Work at your own pace, in your own time, from wherever you are. No deadlines. No pressure.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🎯</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:.06em;margin-bottom:10px">TAILORED TO YOU</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Choose exactly the modules you want. No filler. No compulsory subjects you don't care about. We identify your strengths and tailor the programme to help you reach your full potential.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.12);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🏡</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">WORK FROM HOME</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">The entire course is online. Start from the comfort of your own home, your own sofa, your own kitchen table. All you need is a device and the will to begin.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(245,197,24,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🎁</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:10px">WE FIND YOUR GIFT</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Everyone has a special and unique gift for the world. We help you find yours, then work with you to develop and hone it — even if you can't yet see it yourself. Especially then.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- THE JLA WAY -->
+<section class="section" id="thejlaway" style="padding-top:0">
+  <div class="section-inner">
+    <div class="section-kicker">THE JLA WAY</div>
+    <h2 class="section-title">A Different Kind of Academy</h2>
+    <span class="section-line"></span>
+    <p class="section-sub">We don't just teach differently — we operate differently. These are the principles that make JLA unlike anything else out there.</p>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto">
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.12);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🎮</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">FLEXI PROJECTS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Work on what you actually want to work on. If a project doesn't excite you, switch to one that does. Fresh eyes on a problem are always welcome here — and curiosity is never wasted.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">💡</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:.06em;margin-bottom:10px">CREATE YOUR OWN PROJECTS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Got an idea for something world-changing? If it fits our vision of helping people, you can help make it a reality. You'll be fully credited and earn karma — plus the chance to see your idea actually ship.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.12);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🌅</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">FRIDAY AFTERNOON PROJECTS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Every Friday afternoon is yours. Work on your own ideas, build a prototype, explore something that sparks your imagination. If it has potential, we'll reward you and help you make it real.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(245,197,24,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🏆</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--gold);letter-spacing:.06em;margin-bottom:10px">REWARDS &amp; INCENTIVES</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">Beyond karma, outstanding work earns real rewards — vouchers, experiences, and for the truly exceptional: luxury holidays and cash prizes. Come up with a brilliant idea and get credited and rewarded for it.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(0,232,124,.12);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🤝</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--green);letter-spacing:.06em;margin-bottom:10px">CO-CREATORS, NOT STUDENTS</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">We operate a flat structure — no hierarchy, no performance reviews, no stressful deadlines. Every voice is heard, everyone is treated as an equal. You're not a resource here. You're a co-creator of our new world.</p>
+      </div>
+      <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.15);border-radius:16px;padding:28px 22px">
+        <div style="font-size:28px;margin-bottom:12px">🧠</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--purple);letter-spacing:.06em;margin-bottom:10px">STATE-OF-THE-ART TEACHING</div>
+        <p style="font-size:14px;color:#a8bfd8;line-height:1.65">We use real-time performance metrics to adjust content and techniques to your learning style. Every session is optimised to help you become the best you possibly can be — not just another student in the crowd.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-brand">⚡ JUSTICE LEAGUE <span>ACADEMY</span></div>
+      <p class="footer-about">A free, open superhero training platform where everyone earns karma for learning, teaching and growing. Part of the OASIS Omniverse. No one left behind.</p>
+    </div>
+    <div>
+      <div class="footer-col-title">LEARN</div>
+      <ul class="footer-links">
+        <li><a href="#disciplines">Disciplines</a></li>
+        <li><a href="#courses">All Courses</a></li>
+        <li><a href="#teach">Teach a Class</a></li>
+        <li><a href="#karma">Karma</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">ECOSYSTEM</div>
+      <ul class="footer-links">
+        <li><a href="#">GraceBook</a></li>
+        <li><a href="#">Global Healing Network</a></li>
+        <li><a href="#">Noah's Ark ARN</a></li>
+        <li><a href="#">Our World</a></li>
+        <li><a href="#">OPORTAL</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">OASIS</div>
+      <ul class="footer-links">
+        <li><a href="#">oasisomniverse.one</a></li>
+        <li><a href="#">Web4 API</a></li>
+        <li><a href="#">Karma System</a></li>
+        <li><a href="#">Jobs at OASIS</a></li>
+        <li><a href="#">Create Avatar</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">ORIGINS</div>
+      <ul class="footer-links">
+        <li><a href="https://c8119036-8b0a-4498-ab07-331841f19b4b.filesusr.com/ugd/4280d8_ad8787bd42b1471bae73003bfbf111f7.pdf" target="_blank" rel="noopener">Training Programme v1.6 ↗</a></li>
+        <li><a href="https://c8119036-8b0a-4498-ab07-331841f19b4b.filesusr.com/ugd/4280d8_999d98ba615e4fa6ab4383a415ee24c5.pdf" target="_blank" rel="noopener">Junior Programme v1.6 ↗</a></li>
+      </ul>
+      <p style="font-size:11px;color:#4a6080;margin-top:10px;line-height:1.5">The founding documents<br>JLA was built on.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 JUSTICE LEAGUE ACADEMY · OASIS OMNIVERSE · ALL RIGHTS RESERVED</span>
+    <span class="footer-web4">POWERED BY OASIS WEB 4</span>
+  </div>
+</footer>
+
+<!-- CONNECT AVATAR MODAL -->
+<div class="av-modal-overlay" id="av-modal">
+  <div class="av-modal-box">
+    <button class="av-modal-close" id="av-modal-close">✕</button>
+    <div class="av-modal-kicker">OASIS WEB4 API</div>
+    <div class="av-modal-title">Connect Your Avatar</div>
+    <p class="av-modal-sub">Sign in with your OASIS avatar to enrol in classes, track your progress and earn karma for every module you complete.</p>
+    <input class="av-field" id="bi-email" type="email" placeholder="Email address" autocomplete="username">
+    <input class="av-field" id="bi-password" type="password" placeholder="Password" autocomplete="current-password">
+    <button class="av-submit-btn" id="av-login-btn">CONNECT AVATAR →</button>
+    <div class="av-error" id="av-error"></div>
+    <p class="av-modal-footer">No avatar? <a href="https://oportal.oasisomniverse.one" target="_blank" rel="noopener">Create one free at OPORTAL →</a></p>
+  </div>
+</div>
+
+<!-- KARMA TOAST -->
+<div class="karma-toast" id="karma-toast">
+  <span class="kt-icon">⚡</span>
+  <div>
+    <span class="kt-label" id="kt-label">KARMA EARNED</span>
+    <span class="kt-amount" id="kt-amount">+200</span>
+    <span class="kt-msg" id="kt-msg"></span>
+  </div>
+</div>
+
+<script>
+// ── Stars ──
+(function(){
+  const c=document.getElementById('stars'),ctx=c.getContext('2d');
+  function resize(){c.width=innerWidth;c.height=innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const stars=Array.from({length:220},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.2+.2,a:Math.random()}));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{
+      s.a+=.003*(Math.random()>.5?1:-1);s.a=Math.max(.1,Math.min(1,s.a));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(0,200,255,${s.a*.35})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Hero canvas — shield + lightning bolt + orbiting discipline rings ──
+(function(){
+  const c=document.getElementById('hero-canvas'),ctx=c.getContext('2d');
+  function resize(){c.width=c.parentElement.clientWidth||innerWidth;c.height=c.parentElement.clientHeight||innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const cx=()=>c.width/2, cy=()=>c.height/2;
+
+  const disciplines=[
+    {label:'MINDFULNESS',color:'rgba(168,85,247,',angle:0},
+    {label:'YOGA',color:'rgba(168,85,247,',angle:Math.PI/3},
+    {label:'NUTRITION',color:'rgba(0,232,124,',angle:2*Math.PI/3},
+    {label:'SURVIVAL',color:'rgba(0,232,124,',angle:Math.PI},
+    {label:'CODING',color:'rgba(0,200,255,',angle:4*Math.PI/3},
+    {label:'HEALING',color:'rgba(0,200,255,',angle:5*Math.PI/3},
+    {label:'LEADERSHIP',color:'rgba(245,197,24,',angle:Math.PI/6},
+    {label:'FORESTRY',color:'rgba(245,197,24,',angle:7*Math.PI/6},
+  ];
+
+  let t=0;
+  const pulses=[];
+
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    t+=.008;
+    const X=cx(),Y=cy();
+    const R1=120,R2=200;
+
+    // outer orbit ring
+    ctx.beginPath();ctx.arc(X,Y,R2,0,Math.PI*2);
+    ctx.strokeStyle='rgba(0,200,255,.08)';ctx.lineWidth=1;ctx.stroke();
+    ctx.beginPath();ctx.arc(X,Y,R1,0,Math.PI*2);
+    ctx.strokeStyle='rgba(168,85,247,.08)';ctx.lineWidth=1;ctx.stroke();
+
+    // discipline nodes
+    disciplines.forEach((d,i)=>{
+      const r=i%2===0?R2:R1;
+      const a=d.angle+t*(i%2===0?.4:-.5);
+      const nx=X+Math.cos(a)*r, ny=Y+Math.sin(a)*r;
+      d._x=nx;d._y=ny;
+      const pulse=Math.sin(t*2+i)*.3+.7;
+      ctx.beginPath();ctx.arc(nx,ny,7,0,Math.PI*2);
+      ctx.fillStyle=d.color+(.15*pulse)+')';ctx.fill();
+      ctx.strokeStyle=d.color+(pulse*.7)+')';ctx.lineWidth=1.5;ctx.stroke();
+      // connect to centre
+      ctx.beginPath();ctx.moveTo(X,Y);ctx.lineTo(nx,ny);
+      ctx.strokeStyle=d.color+(.06)+')';ctx.lineWidth=1;ctx.stroke();
+      // label
+      ctx.font='700 8px "Share Tech Mono"';
+      ctx.fillStyle=d.color+(.7*pulse)+')';
+      ctx.textAlign='center';
+      ctx.fillText(d.label,nx,ny+(ny>Y?18:-10));
+    });
+
+    // central shield glow
+    const g=ctx.createRadialGradient(X,Y,0,X,Y,80);
+    g.addColorStop(0,'rgba(0,200,255,.12)');
+    g.addColorStop(.5,'rgba(168,85,247,.06)');
+    g.addColorStop(1,'transparent');
+    ctx.beginPath();ctx.arc(X,Y,80,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+
+    // ⚡ bolt symbol
+    ctx.font='bold 38px serif';ctx.textAlign='center';ctx.fillStyle='rgba(0,200,255,.55)';
+    ctx.fillText('⚡',X,Y+13);
+
+    // karma pulses
+    if(Math.random()>.96 && disciplines.filter(d=>d._x).length>1){
+      const a=disciplines[Math.floor(Math.random()*disciplines.length)];
+      pulses.push({sx:a._x,sy:a._y,tx:X,ty:Y,p:0,col:a.color});
+    }
+    pulses.forEach(p=>{
+      p.p+=.03;
+      const px=p.sx+(p.tx-p.sx)*p.p, py=p.sy+(p.ty-p.sy)*p.p;
+      ctx.beginPath();ctx.arc(px,py,3,0,Math.PI*2);
+      ctx.fillStyle=p.col+(1-p.p)+')';ctx.fill();
+    });
+    for(let i=pulses.length-1;i>=0;i--){if(pulses[i].p>=1)pulses.splice(i,1);}
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── Nav toggle ──
+document.getElementById('nav-toggle').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('nav-links').classList.toggle('open');
+});
+</script>
+
+<!-- CONNECT AVATAR button — sync inject, no module dependency -->
+<script>
+(function(){
+  const navCta=document.querySelector('.nav-cta');
+  if(!navCta)return;
+  const btn=document.createElement('button');
+  btn.className='av-connect-btn';btn.id='av-connect-btn';btn.textContent='⬡ CONNECT AVATAR';
+  navCta.after(btn);
+  const badge=document.createElement('div');
+  badge.className='av-connected-badge';badge.id='av-badge';
+  badge.innerHTML='<span class="av-avatar-name" id="av-avatar-name">—</span><span class="av-karma-pill" id="av-karma-pill" title="Your karma">⚡ 0</span><button class="av-logout-btn" id="av-logout-btn" title="Disconnect">✕</button>';
+  btn.after(badge);
+  btn.addEventListener('click',function(){
+    document.getElementById('av-modal').classList.add('open');
+    document.getElementById('bi-email')?.focus();
+  });
+})();
+</script>
+
+<script type="module">
+import { OASISClient } from 'https://esm.sh/@oasisomniverse/web4-api@2.0.2';
+const oasis=new OASISClient({baseUrl:'https://api.web4.oasisomniverse.one',persistSession:true});
+let session=null;
+
+const modal=document.getElementById('av-modal');
+const modalClose=document.getElementById('av-modal-close');
+const loginBtn=document.getElementById('av-login-btn');
+const errorEl=document.getElementById('av-error');
+const toast=document.getElementById('karma-toast');
+
+function closeModal(){modal.classList.remove('open');errorEl.textContent='';}
+modalClose.addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+loginBtn.addEventListener('click',async()=>{
+  const email=document.getElementById('bi-email').value.trim();
+  const password=document.getElementById('bi-password').value;
+  if(!email||!password){errorEl.textContent='Please enter your email and password.';return;}
+  loginBtn.disabled=true;loginBtn.textContent='CONNECTING…';
+  try{
+    const res=await oasis.auth.login({email,password});
+    session=res?.session??res;
+    closeModal();await onConnected();
+  }catch(e){
+    errorEl.textContent=e?.message??'Could not connect. Please try again.';
+    loginBtn.disabled=false;loginBtn.textContent='CONNECT AVATAR →';
+  }
+});
+
+async function onConnected(){
+  const connectBtn=document.getElementById('av-connect-btn');
+  const badge=document.getElementById('av-badge');
+  if(connectBtn)connectBtn.style.display='none';
+  if(badge)badge.classList.add('show');
+  const name=session?.avatarUsername??session?.username??session?.firstName??'Hero';
+  const nameEl=document.getElementById('av-avatar-name');
+  if(nameEl)nameEl.textContent=name;
+  await refreshKarma();
+  enableCourseButtons();
+}
+
+async function refreshKarma(){
+  if(!session?.avatarId)return;
+  try{
+    const res=await oasis.karma.getKarmaForAvatar({avatarId:session.avatarId});
+    const k=res?.karma??res?.totalKarma??0;
+    const pill=document.getElementById('av-karma-pill');
+    if(pill)pill.textContent=`⚡ ${k.toLocaleString()}`;
+  }catch(_){}
+}
+
+function showToast(amount,msg){
+  document.getElementById('kt-amount').textContent=(amount>0?'+':'')+amount;
+  document.getElementById('kt-msg').textContent=msg;
+  toast.classList.add('show');
+  setTimeout(()=>toast.classList.remove('show'),3500);
+}
+
+function enableCourseButtons(){
+  const courses=[
+    {id:'btn-mindfulness',source:'CompleteJLAModule',amount:200,msg:'Introduction to Mindfulness'},
+    {id:'btn-nutrition',source:'CompleteJLAModule',amount:250,msg:'Plant-Based Nutrition'},
+    {id:'btn-coding',source:'CompleteJLAModule',amount:400,msg:'Conscious Coding'},
+    {id:'btn-survival',source:'CompleteJLAModule',amount:350,msg:'Wilderness Survival'},
+    {id:'btn-healing',source:'CompleteJLAModule',amount:500,msg:'Distance Healing Practitioner'},
+    {id:'btn-movements',source:'CompleteJLAModule',amount:500,msg:'Building Movements That Matter'},
+  ];
+  courses.forEach(({id,source,amount,msg})=>{
+    const btn=document.getElementById(id);
+    if(!btn)return;
+    btn.disabled=false;btn.textContent='ENROL NOW';
+    btn.addEventListener('click',async()=>{
+      if(!session?.avatarId){document.getElementById('av-modal').classList.add('open');return;}
+      btn.disabled=true;btn.textContent='ENROLLING…';
+      try{
+        await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:source,karmaAmount:amount});
+        showToast(amount,msg);btn.textContent='ENROLLED ✓';
+        await refreshKarma();
+      }catch(e){
+        btn.disabled=false;btn.textContent='ENROL NOW';
+      }
+    });
+  });
+
+  const submitBtn=document.getElementById('btn-submit-class');
+  if(submitBtn){
+    submitBtn.addEventListener('click',async()=>{
+      if(!session?.avatarId){document.getElementById('av-modal').classList.add('open');return;}
+      submitBtn.disabled=true;submitBtn.textContent='SUBMITTING…';
+      try{
+        await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:'TeachJLAModule',karmaAmount:750});
+        showToast(750,'Module submitted for review');submitBtn.textContent='SUBMITTED ✓';
+        await refreshKarma();
+      }catch(e){
+        submitBtn.disabled=false;submitBtn.textContent='SUBMIT A CLASS';
+      }
+    });
+  }
+}
+
+document.getElementById('av-logout-btn')?.addEventListener('click',()=>{
+  oasis.auth.logout().catch(()=>{});session=null;
+  const connectBtn=document.getElementById('av-connect-btn');
+  const badge=document.getElementById('av-badge');
+  if(connectBtn)connectBtn.style.display='';
+  if(badge)badge.classList.remove('show');
+  document.querySelectorAll('.course-btn').forEach(b=>{b.disabled=true;b.textContent='CONNECT TO ENROL';});
+});
+document.getElementById('av-karma-pill')?.addEventListener('click',refreshKarma);
+
+(async()=>{
+  try{
+    if(await oasis.auth.isAuthenticated()){
+      const res=await oasis.auth.getSession?.()??null;
+      if(res){session=res;await onConnected();}
+    }
+  }catch(_){}
+})();
+</script>
+
+</body>
+</html>
