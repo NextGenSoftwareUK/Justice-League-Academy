@@ -446,7 +446,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
         <p class="course-desc">Learn the fundamentals of present-moment awareness. Simple practices you can start using in daily life from day one — no prior experience needed.</p>
         <div class="course-footer">
           <span class="course-karma">+200 KARMA</span>
-          <button class="course-btn" id="btn-mindfulness" disabled>CONNECT TO ENROL</button>
+          <button class="course-btn" id="btn-mindfulness">ENROL NOW</button>
         </div>
       </div>
 
@@ -460,7 +460,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
         <p class="course-desc">Understand how food affects your body, mind and the planet. Practical meal planning, nutritional science and how to eat well on any budget.</p>
         <div class="course-footer">
           <span class="course-karma">+250 KARMA</span>
-          <button class="course-btn" id="btn-nutrition" disabled>CONNECT TO ENROL</button>
+          <button class="course-btn" id="btn-nutrition">ENROL NOW</button>
         </div>
       </div>
 
@@ -474,7 +474,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
         <p class="course-desc">HTML, CSS and JavaScript taught with purpose. Build real projects that help real people. No prior coding experience needed — just curiosity.</p>
         <div class="course-footer">
           <span class="course-karma">+400 KARMA</span>
-          <button class="course-btn" id="btn-coding" disabled>CONNECT TO ENROL</button>
+          <button class="course-btn" id="btn-coding">ENROL NOW</button>
         </div>
       </div>
 
@@ -488,7 +488,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
         <p class="course-desc">Fire, shelter, water, foraging and navigation. Ancient skills that reconnect you to the earth and prepare you for anything. Practical. Powerful. Primal.</p>
         <div class="course-footer">
           <span class="course-karma">+350 KARMA</span>
-          <button class="course-btn" id="btn-survival" disabled>CONNECT TO ENROL</button>
+          <button class="course-btn" id="btn-survival">ENROL NOW</button>
         </div>
       </div>
 
@@ -502,7 +502,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
         <p class="course-desc">Advanced energy work and distance healing techniques. Certified completion qualifies you to join the Global Healing Network as a registered healer.</p>
         <div class="course-footer">
           <span class="course-karma">+500 KARMA</span>
-          <button class="course-btn" id="btn-healing" disabled>CONNECT TO ENROL</button>
+          <button class="course-btn" id="btn-healing">ENROL NOW</button>
         </div>
       </div>
 
@@ -516,7 +516,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
         <p class="course-desc">From local community groups to global campaigns — learn how the most impactful movements in history were built and how you can start yours.</p>
         <div class="course-footer">
           <span class="course-karma">+500 KARMA</span>
-          <button class="course-btn" id="btn-movements" disabled>CONNECT TO ENROL</button>
+          <button class="course-btn" id="btn-movements">ENROL NOW</button>
         </div>
       </div>
     </div>
@@ -1144,6 +1144,7 @@ document.getElementById('nav-toggle').addEventListener('click',function(){
 import { OASISClient } from 'https://esm.sh/@oasisomniverse/web4-api@2.0.2';
 const oasis=new OASISClient({baseUrl:'https://api.web4.oasisomniverse.one',persistSession:true});
 let session=null;
+let pendingAction=null;
 
 const modal=document.getElementById('av-modal');
 const modalClose=document.getElementById('av-modal-close');
@@ -1181,6 +1182,7 @@ async function onConnected(){
   if(nameEl)nameEl.textContent=name;
   await refreshKarma();
   enableCourseButtons();
+  if(pendingAction){const a=pendingAction;pendingAction=null;a();}
 }
 
 async function refreshKarma(){
@@ -1200,46 +1202,47 @@ function showToast(amount,msg){
   setTimeout(()=>toast.classList.remove('show'),3500);
 }
 
-function enableCourseButtons(){
-  const courses=[
-    {id:'btn-mindfulness',source:'CompleteJLAModule',amount:200,msg:'Introduction to Mindfulness'},
-    {id:'btn-nutrition',source:'CompleteJLAModule',amount:250,msg:'Plant-Based Nutrition'},
-    {id:'btn-coding',source:'CompleteJLAModule',amount:400,msg:'Conscious Coding'},
-    {id:'btn-survival',source:'CompleteJLAModule',amount:350,msg:'Wilderness Survival'},
-    {id:'btn-healing',source:'CompleteJLAModule',amount:500,msg:'Distance Healing Practitioner'},
-    {id:'btn-movements',source:'CompleteJLAModule',amount:500,msg:'Building Movements That Matter'},
-  ];
-  courses.forEach(({id,source,amount,msg})=>{
+const JLA_COURSES=[
+  {id:'btn-mindfulness',source:'CompleteJLAModule',amount:200,msg:'Introduction to Mindfulness'},
+  {id:'btn-nutrition',source:'CompleteJLAModule',amount:250,msg:'Plant-Based Nutrition'},
+  {id:'btn-coding',source:'CompleteJLAModule',amount:400,msg:'Conscious Coding'},
+  {id:'btn-survival',source:'CompleteJLAModule',amount:350,msg:'Wilderness Survival'},
+  {id:'btn-healing',source:'CompleteJLAModule',amount:500,msg:'Distance Healing Practitioner'},
+  {id:'btn-movements',source:'CompleteJLAModule',amount:500,msg:'Building Movements That Matter'},
+];
+
+async function doEnrol(btn,source,amount,msg){
+  btn.disabled=true;btn.textContent='ENROLLING…';
+  try{
+    await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:source,karmaAmount:amount});
+    showToast(amount,msg);btn.textContent='ENROLLED ✓';
+    await refreshKarma();
+  }catch(e){btn.disabled=false;btn.textContent='ENROL NOW';}
+}
+
+// Set up course & submit listeners at page load
+(function(){
+  JLA_COURSES.forEach(({id,source,amount,msg})=>{
     const btn=document.getElementById(id);
     if(!btn)return;
-    btn.disabled=false;btn.textContent='ENROL NOW';
-    btn.addEventListener('click',async()=>{
-      if(!session?.avatarId){document.getElementById('av-modal').classList.add('open');return;}
-      btn.disabled=true;btn.textContent='ENROLLING…';
-      try{
-        await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:source,karmaAmount:amount});
-        showToast(amount,msg);btn.textContent='ENROLLED ✓';
-        await refreshKarma();
-      }catch(e){
-        btn.disabled=false;btn.textContent='ENROL NOW';
-      }
+    btn.addEventListener('click',()=>{
+      if(!session?.avatarId){pendingAction=()=>doEnrol(btn,source,amount,msg);document.getElementById('av-modal').classList.add('open');return;}
+      doEnrol(btn,source,amount,msg);
     });
   });
-
   const submitBtn=document.getElementById('btn-submit-class');
   if(submitBtn){
     submitBtn.addEventListener('click',async()=>{
-      if(!session?.avatarId){document.getElementById('av-modal').classList.add('open');return;}
+      if(!session?.avatarId){pendingAction=async()=>{submitBtn.disabled=true;submitBtn.textContent='SUBMITTING…';try{await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:'TeachJLAModule',karmaAmount:750});showToast(750,'Module submitted for review');submitBtn.textContent='SUBMITTED ✓';await refreshKarma();}catch(e){submitBtn.disabled=false;submitBtn.textContent='SUBMIT A CLASS';}};document.getElementById('av-modal').classList.add('open');return;}
       submitBtn.disabled=true;submitBtn.textContent='SUBMITTING…';
-      try{
-        await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:'TeachJLAModule',karmaAmount:750});
-        showToast(750,'Module submitted for review');submitBtn.textContent='SUBMITTED ✓';
-        await refreshKarma();
-      }catch(e){
-        submitBtn.disabled=false;submitBtn.textContent='SUBMIT A CLASS';
-      }
+      try{await oasis.avatar.addKarmaToAvatar({avatarId:session.avatarId,karmaSource:'TeachJLAModule',karmaAmount:750});showToast(750,'Module submitted for review');submitBtn.textContent='SUBMITTED ✓';await refreshKarma();}
+      catch(e){submitBtn.disabled=false;submitBtn.textContent='SUBMIT A CLASS';}
     });
   }
+})();
+
+function enableCourseButtons(){
+  // Buttons are always enabled; nothing to do on connect
 }
 
 document.getElementById('av-logout-btn')?.addEventListener('click',()=>{
@@ -1248,7 +1251,6 @@ document.getElementById('av-logout-btn')?.addEventListener('click',()=>{
   const badge=document.getElementById('av-badge');
   if(connectBtn)connectBtn.style.display='';
   if(badge)badge.classList.remove('show');
-  document.querySelectorAll('.course-btn').forEach(b=>{b.disabled=true;b.textContent='CONNECT TO ENROL';});
 });
 document.getElementById('av-karma-pill')?.addEventListener('click',refreshKarma);
 
