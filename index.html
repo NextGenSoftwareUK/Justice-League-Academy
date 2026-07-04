@@ -1142,6 +1142,7 @@ document.getElementById('nav-toggle').addEventListener('click',function(){
 })();
 </script>
 
+<script>if(window.fetch)window.fetch=window.fetch.bind(window);</script>
 <script type="module">
 import { OASISClient } from 'https://esm.sh/@oasisomniverse/web4-api@2.0.2';
 const oasis=new OASISClient({baseUrl:'https://api.web4.oasisomniverse.one',persistSession:true});
