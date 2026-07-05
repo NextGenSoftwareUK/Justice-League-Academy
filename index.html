@@ -227,7 +227,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:18px 40px;display:fl
 footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid rgba(0,200,255,.08)}
 .footer-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
 @media(max-width:760px){.footer-inner{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){.courses-grid,.disc-grid,.jobs-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.courses-grid,.disc-grid,.jobs-grid{grid-template-columns:1fr}.tier-grid{grid-template-columns:1fr!important}}
 @media(max-width:480px){.footer-inner{grid-template-columns:1fr}}
 .footer-brand{font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;letter-spacing:.12em;color:#fff;margin-bottom:12px}
 .footer-brand span{color:var(--blue)}
@@ -682,7 +682,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
       <p style="font-family:'Orbitron',sans-serif;font-size:clamp(15px,2vw,19px);font-weight:700;color:#fff;line-height:1.6;margin-bottom:28px;letter-spacing:.02em">"As one wise person once said — <span style="color:var(--blue)">'I have a dream'</span>… well, we have a dream too."</p>
       <p style="font-size:15px;color:#a8bfd8;line-height:1.8;margin-bottom:20px">A vision where we can all co-exist in peace and harmony — not only with ourselves but with the planet. A vision where war, fear and separation are things of the past. A vision where love is the predominant force on Earth.</p>
       <p style="font-size:15px;color:#a8bfd8;line-height:1.8;margin-bottom:28px">We want to reach this vision by using technology for good rather than evil — to connect people rather than disconnect them, to improve the quality of life for every soul on the planet, and to restore our world to her former beauty.</p>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:14px">
         <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Use technology for good, never for harm</div>
         <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Connect people across communities and continents</div>
         <div style="background:rgba(0,200,255,.05);border:1px solid rgba(0,200,255,.15);border-radius:12px;padding:16px 18px;font-size:14px;color:#a8bfd8;line-height:1.65">⚡ Teach mindfulness, meditation, yoga, nutrition and nature</div>
@@ -752,7 +752,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
     <h2 class="section-title">Holistic Skills for Holistic Coders</h2>
     <span class="section-line"></span>
     <p class="section-sub">Our unique *4Coders modules prove what we've always known: happier, healthier, more balanced people make better developers. These are built into your training day — not extras you have to find time for.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px;max-width:1100px;margin:0 auto">
       <div style="background:var(--bg-card);border:1px solid rgba(168,85,247,.2);border-radius:16px;padding:28px 22px">
         <div style="font-size:32px;margin-bottom:12px">🧘</div>
         <div style="font-family:'Orbitron',sans-serif;font-size:15px;font-weight:700;color:var(--purple);letter-spacing:.06em;margin-bottom:10px">YOGA4CODERS</div>
@@ -862,7 +862,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
     <h2 class="section-title">So Much More Than a Course</h2>
     <span class="section-line"></span>
     <p class="section-sub">JLA isn't just training. It's a whole new way of learning, living and contributing — designed around you as a human being, not as a resource.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px;max-width:1100px;margin:0 auto">
       <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.12);border-radius:16px;padding:28px 22px">
         <div style="font-size:28px;margin-bottom:12px">💼</div>
         <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">REAL-WORLD EXPERIENCE</div>
@@ -904,7 +904,7 @@ footer{position:relative;z-index:1;padding:56px 24px 40px;border-top:1px solid r
     <h2 class="section-title">A Different Kind of Academy</h2>
     <span class="section-line"></span>
     <p class="section-sub">We don't just teach differently — we operate differently. These are the principles that make JLA unlike anything else out there.</p>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:20px;max-width:1100px;margin:0 auto">
       <div style="background:var(--bg-card);border:1px solid rgba(0,200,255,.12);border-radius:16px;padding:28px 22px">
         <div style="font-size:28px;margin-bottom:12px">🎮</div>
         <div style="font-family:'Orbitron',sans-serif;font-size:12px;font-weight:700;color:var(--blue);letter-spacing:.06em;margin-bottom:10px">FLEXI PROJECTS</div>
